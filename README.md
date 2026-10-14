@@ -13,8 +13,8 @@
 | 파일 | 취약점 | 핵심 아이디어 | 블로그 풀이 |
 |------|--------|---------------|-------------|
 | [`natas08.py`](natas08.py) | 인코딩 역추적 | base64 → reverse → hex 로직을 역연산해 secret 복원 | [natas8](https://kisuk0104.tistory.com/51) |
-| [`natas09.py`](natas09.py) | OS Command Injection | `passthru`에 입력값을 검증 없이 연결 → `;`로 명령 분리 후 임의 명령 실행 | [natas8](https://kisuk0104.tistory.com/52) |
-| [`natas10.py`](natas10.py) | Command Injection (필터 우회) | `preg_match`로 `;`,`&`,`\|` 필터 → grep 정규식 특성을 이용한 파일 읽기 | [natas9](https://kisuk0104.tistory.com/53) |
+| [`natas09.py`](natas09.py) | OS Command Injection | `passthru`에 입력값을 검증 없이 연결 → `;`로 명령 분리 후 임의 명령 실행 | [natas9](https://kisuk0104.tistory.com/52) |
+| [`natas10.py`](natas10.py) | Command Injection (필터 우회) | `preg_match`로 `;`,`&`,`\|` 필터 → grep 정규식 특성을 이용한 파일 읽기 | [natas10](https://kisuk0104.tistory.com/53) |
 | [`natas11.py`](natas11.py) | 쿠키 변조 (XOR) | base64+JSON 쿠키를 XOR 복호화 → 키 복원 후 위조 쿠키 생성 | _(작성 예정)_ |
 
 ---
