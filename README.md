@@ -26,14 +26,8 @@ pip install requests
 python natas08.py
 ```
 
-각 스크립트는 환경변수로 비밀번호를 받습니다. 본인 계정의 값으로 설정 후 실행하세요.
-
-```bash
-export NATAS_PASS="your_level_password"
-python natas09.py
-```
-
-> ⚠️ 비밀번호를 코드에 하드코딩하지 말고 환경변수로 분리했습니다.
+각 스크립트 상단의 비밀번호 변수에 본인 값을 넣고 실행하세요.
+Natas는 직전 레벨을 풀어야 다음 레벨 비밀번호를 얻는 구조라, 값을 고정하지 않고 실행 시 직접 입력하도록 비워두었습니다.
 
 ---
 
