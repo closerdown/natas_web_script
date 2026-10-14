@@ -8,6 +8,7 @@
 - `natas8.py` — 인코딩 역추적 (hex / reverse / base64)
 - `natas9.py` — 커맨드 인젝션
 - `natas10.py` — 정규식 필터 우회 커맨드 인젝션
+- `natas11.py` — 쿠키값 인코딩 및 디코딩(xor, json, base64) => xor이 핵심(역연산)
 
 ## 실행
 
