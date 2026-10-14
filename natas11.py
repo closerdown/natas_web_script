@@ -68,7 +68,7 @@ if isinstance(enc_cookie, bytes):
   enc_cookie = enc_cookie.decode()
   
 payload = {"data": enc_cookie}
-response = sess.get(url, auth= sess.auth, cookies=payload)
+response = sess.get(url, cookies=payload)
 
 # response.text를 하게되면 html을 전부 불러오기 때문에, beautifulSoup 모듈로 포멧에 맞게 파싱해서 원하는 값만 출력
 soup = BeautifulSoup(response.text, "html.parser")
