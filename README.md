@@ -19,6 +19,7 @@
 | [`natas11.py`](natas11.py) | 쿠키 변조 (XOR) | base64+JSON 쿠키를 XOR 복호화 → 키 복원 후 위조 쿠키 생성 | [natas11](https://kisuk0104.tistory.com/55)|
 | [`natas12.py`](natas12.py) | HTML에서 사용자 입력값 검증 부재로 인한, Hidden 값을 통한 파일 업로드 확장자 우회 취약점 (웹셸 이용)| 파일 확장자를 참조하는 hidden값 조작 및 php환경에 사용되는 웹셸을 이용하여 비밀번호 데이터에 접근| [natas12](https://kisuk0104.tistory.com/56)|
 | [`natas13.py`](natas13.py) | 파일 업로드 (`exif_imagetype()` 이미지 시그니처 검사 우회, 웹셸 이용)| 웹셸 앞에 이미지(jpg) 매직 바이트(예:`\xFF\xD8\xFF\xE1`)를 붙여 `exif_imagetype()` 검사를 통과시킨 뒤, natas12와 동일하게 hidden 확장자를 php로 조작해 업로드 → 웹셸로 비밀번호 접근| [natas13](https://kisuk0104.tistory.com/57) |
+| [`natas14.py`](natas14.py) | SQL Injection (로그인 우회) | 입력값이 쿼리 문법으로 해석되는 점을 이용. `" or 1=1#`로 WHERE 조건을 참으로 만들어 `num_rows > 0` 통과 → 인증 우회 후 비밀번호 추출 | [natas14](https://kisuk0104.tistory.com/) |
 
 ---
 
