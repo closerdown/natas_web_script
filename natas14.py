@@ -23,7 +23,7 @@ def expliot(payload):
 
 # Aceess denied인 경우 페이로드가 맞지 익스플로잇 실패함.
  if "Access denied" in response.text:
-  return response.text
+  return None
 
 # re를 통해 비밀번호에 해당하는 문자열만 검색해서 출력(만약 오류페이지나 먼가 실패했다면 아래와 같이 html 전체를 출력하도록 함.)
  else:
