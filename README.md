@@ -18,6 +18,7 @@
 | [`natas10.py`](natas10.py) | Command Injection (필터 우회) | `preg_match`로 `;`,`&`,`\|` 필터 → grep 정규식 특성을 이용한 파일 읽기 | [natas10](https://kisuk0104.tistory.com/53) |
 | [`natas11.py`](natas11.py) | 쿠키 변조 (XOR) | base64+JSON 쿠키를 XOR 복호화 → 키 복원 후 위조 쿠키 생성 | [natas11](https://kisuk0104.tistory.com/55)|
 | [`natas12.py`](natas12.py) | HTML에서 사용자 입력값 검증 부재로 인한, Hidden 값을 통한 파일 업로드 확장자 우회 취약점 (웹셸 이용)| 파일 확장자를 참조하는 hidden값 조작 및 php환경에 사용되는 웹셸을 이용하여 비밀번호 데이터에 접근| [natas12](https://kisuk0104.tistory.com/56)|
+| [`natas13.py`](natas13.py) | 파일 업로드 (`exif_imagetype()` 이미지 시그니처 검사 우회, 웹셸 이용)| 웹셸 앞에 이미지(jpg) 매직 바이트(예:`\xFF\xD8\xFF\xE1`)를 붙여 `exif_imagetype()` 검사를 통과시킨 뒤, natas12와 동일하게 hidden 확장자를 php로 조작해 업로드 → 웹셸로 비밀번호 접근| [natas13](https://kisuk0104.tistory.com/57) |
 
 ---
 
