@@ -2,7 +2,7 @@ import requests
 import string
 
 url = "http://natas16.natas.labs.overthewire.org/"
-# 나타스 비밀번호 직접 대입
+# 나타스15에서 얻은 비밀번호 직접 대입
 natas16_cred = ""
 
 s = requests.Session()
