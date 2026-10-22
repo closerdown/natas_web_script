@@ -20,7 +20,7 @@
 | [`natas13.py`](natas13/natas13.py) | 파일 업로드 (`exif_imagetype()` 시그니처 검사 우회, 웹셸 이용) | 웹셸 앞에 JPG 매직 바이트(예: `\xFF\xD8\xFF\xE1`)를 붙여 `exif_imagetype()` 검사를 통과시키고, natas12처럼 hidden 확장자를 `.php`로 조작해 업로드 → 웹셸로 비밀번호 접근 (페이로드 생성 보조: [`creat_file.py`](natas13/creat_file.py)) | [natas13](https://kisuk0104.tistory.com/57) |
 | [`natas14.py`](natas14.py) | SQL Injection (로그인 우회) | 입력값이 쿼리 문법으로 해석되는 점을 이용. `" or 1=1#`로 WHERE 조건을 참으로 만들어 `num_rows > 0` 통과 → 인증 우회 후 비밀번호 추출 | [natas14](https://kisuk0104.tistory.com/58) |
 | [`natas15.py`](natas15.py) | Blind SQL Injection (Boolean 기반) | 응답의 `This user exists.` 유무로만 참/거짓이 노출됨. `LENGTH(password)`로 길이를 확정한 뒤 `substr(password, i, 1) = BINARY "문자"`로 한 글자씩 brute force. `BINARY`로 대소문자까지 구분해 비밀번호 완성 | [natas15](https://kisuk0104.tistory.com/59) |
-| [`natas16.py`](natas16.py) | Blind OS Command Injection (명령 치환) | `grep "$key" dictionary.txt`에서 큰따옴표 안 `$(...)` 명령 치환이 동작하는 점을 이용. `$(grep ^<접두사> /etc/natas_webpass/natas17)<사전단어>`를 주입해, 접두사가 맞으면 사전 단어가 결과에서 사라지는 Boolean 신호를 만들어 한 글자씩 비밀번호 추출 | [natas16](https://kisuk0104.tistory.com/) |
+| [`natas16.py`](natas16.py) | Blind OS Command Injection (명령 치환) | `grep "$key" dictionary.txt`에서 큰따옴표 안 `$(...)` 명령 치환이 동작하는 점을 이용. `$(grep ^<접두사> /etc/natas_webpass/natas17)<사전단어>`를 주입해, 접두사가 맞으면 사전 단어가 결과에서 사라지는 Boolean 신호를 만들어 한 글자씩 비밀번호 추출 | [natas16](https://kisuk0104.tistory.com/60) |
 
 ---
 
