@@ -22,6 +22,7 @@
 | [`natas15.py`](natas15.py) | Blind SQL Injection (Boolean) | 응답의 `This user exists.` 유무만으로 참/거짓 판별. `LENGTH(password)`로 길이를 확정한 뒤 `substr(password, i, 1) = BINARY "문자"`로 한 글자씩 brute force (`BINARY`로 대소문자 구분) | [natas15](https://kisuk0104.tistory.com/59) |
 | [`natas16.py`](natas16.py) | Blind OS Command Injection (명령 치환) | 큰따옴표 안에서 `$(...)` 명령 치환이 동작하는 점을 이용. `$(grep ^<접두사> /etc/natas_webpass/natas17)<사전단어>`를 주입해, 접두사가 맞으면 사전 단어가 결과에서 사라지는 Boolean 신호로 한 글자씩 비밀번호 추출 | [natas16](https://kisuk0104.tistory.com/60) |
 | [`natas17.py`](natas17.py) | Blind SQL Injection (Time-based) | 응답에 참/거짓 단서가 전혀 없는 상황. `IF(substr(password, i, 1) = BINARY "문자", sleep(N), 0)`를 주입하고 요청 `timeout`을 `sleep`보다 짧게 걸어, 지연(Timeout) 발생 여부로 한 글자씩 비밀번호 추출 | [natas17](https://kisuk0104.tistory.com/61) |
+| [`natas18.py`](natas18.py) | Session Hijacking (예측 가능한 세션 ID) | 세션 ID가 `rand(1, 640)`으로 생성되어 범위가 1~640으로 좁음. `PHPSESSID` 쿠키값을 1부터 640까지 순회하며 요청해, `admin=1`이 저장된 관리자 세션을 탈취 → 비밀번호 획득 | [natas18](https://kisuk0104.tistory.com/62) |
 
 ---
 
@@ -30,7 +31,6 @@
 ```text
 natas_web_script/
 ├── natas08.py
-
 ├── natas09.py
 ├── natas10.py
 ├── natas11.py
@@ -41,7 +41,8 @@ natas_web_script/
 ├── natas14.py
 ├── natas15.py
 ├── natas16.py
-└── natas17.py
+├── natas17.py
+└── natas18.py
 ```
 
 ---
@@ -63,6 +64,5 @@ python natas08.py
 - **대상**: OverTheWire Natas (공개 학습용 워게임)
 - **목적**: 웹 취약점 원리 학습 및 익스플로잇 자동화 연습
 - **블로그**: https://kisuk0104.tistory.com/
-
 
 > 학습 목적의 코드입니다. 허가된 환경(본 워게임, 본인 소유 시스템) 외에는 사용하지 마세요.
