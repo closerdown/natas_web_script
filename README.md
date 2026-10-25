@@ -23,6 +23,7 @@
 | [`natas16.py`](natas16.py) | Blind OS Command Injection (명령 치환) | 큰따옴표 안에서 `$(...)` 명령 치환이 동작하는 점을 이용. `$(grep ^<접두사> /etc/natas_webpass/natas17)<사전단어>`를 주입해, 접두사가 맞으면 사전 단어가 결과에서 사라지는 Boolean 신호로 한 글자씩 비밀번호 추출 | [natas16](https://kisuk0104.tistory.com/60) |
 | [`natas17.py`](natas17.py) | Blind SQL Injection (Time-based) | 응답에 참/거짓 단서가 전혀 없는 상황. `IF(substr(password, i, 1) = BINARY "문자", sleep(N), 0)`를 주입하고 요청 `timeout`을 `sleep`보다 짧게 걸어, 지연(Timeout) 발생 여부로 한 글자씩 비밀번호 추출 | [natas17](https://kisuk0104.tistory.com/61) |
 | [`natas18.py`](natas18.py) | Session Hijacking (예측 가능한 세션 ID) | 세션 ID가 `rand(1, 640)`으로 생성되어 범위가 1~640으로 좁음. `PHPSESSID` 쿠키값을 1부터 640까지 순회하며 요청해, `admin=1`이 저장된 관리자 세션을 탈취 → 비밀번호 획득 | [natas18](https://kisuk0104.tistory.com/62) |
+| [`natas19.py`](natas19.py) | Session Hijacking (예측 가능한 세션 ID + 단순 인코딩) | natas18과 본질적으로 동일하나 세션값을 `{숫자}-{사용자명}` 형태로 만든 뒤 hex로 한 겹 인코딩. 자신의 쿠키를 디코딩해 규칙을 파악한 뒤, `{1~640}-admin`을 hex로 인코딩한 값으로 `PHPSESSID`를 순회해 관리자 세션 위조 → 비밀번호 획득. 인코딩은 암호화가 아니므로 예측 가능성은 그대로 남는다 | [natas19](https://kisuk0104.tistory.com/63) |
 
 ---
 
@@ -42,7 +43,8 @@ natas_web_script/
 ├── natas15.py
 ├── natas16.py
 ├── natas17.py
-└── natas18.py
+├── natas18.py
+└── natas19.py
 ```
 
 ---
