@@ -63,14 +63,7 @@ python natas08.py
 - `natas20.py`부터는 비밀번호를 코드에 하드코딩하지 않고 실행 인자로 받습니다. 아래처럼 비밀번호를 인자로 넘겨 실행하세요.
 
   ```bash
-  python3 natas20.py <natas20_password>
-  ```
-
-  스크립트 상단에 셔뱅(`#!/usr/bin/env python3`)이 있으므로, 실행 권한을 주면 인터프리터 없이 바로 실행할 수도 있습니다.
-
-  ```bash
-  chmod +x natas20.py
-  ./natas20.py <natas20_password>
+  python natas20.py <natas20_password>
   ```
 
 ---
