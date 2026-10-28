@@ -24,6 +24,7 @@
 | [`natas17.py`](natas17.py) | Blind SQL Injection (Time-based) | 응답에 참/거짓 단서가 전혀 없는 상황. `IF(substr(password, i, 1) = BINARY "문자", sleep(N), 0)`를 주입하고 요청 `timeout`을 `sleep`보다 짧게 걸어, 지연(Timeout) 발생 여부로 한 글자씩 비밀번호 추출 | [natas17](https://kisuk0104.tistory.com/61) |
 | [`natas18.py`](natas18.py) | Session Hijacking (예측 가능한 세션 ID) | 세션 ID가 `rand(1, 640)`으로 생성되어 범위가 1~640으로 좁음. `PHPSESSID` 쿠키값을 1부터 640까지 순회하며 요청해, `admin=1`이 저장된 관리자 세션을 탈취 → 비밀번호 획득 | [natas18](https://kisuk0104.tistory.com/62) |
 | [`natas19.py`](natas19.py) | Session Hijacking (예측 가능한 세션 ID + 단순 인코딩) | natas18과 본질적으로 동일하나 세션값을 `{숫자}-{사용자명}` 형태로 만든 뒤 hex로 한 겹 인코딩. 자신의 쿠키를 디코딩해 규칙을 파악한 뒤, `{1~640}-admin`을 hex로 인코딩한 값으로 `PHPSESSID`를 순회해 관리자 세션 위조 → 비밀번호 획득. 인코딩은 암호화가 아니므로 예측 가능성은 그대로 남는다 | [natas19](https://kisuk0104.tistory.com/63) |
+| [`natas20.py`](natas20.py) | 세션 직렬화 포맷 조작 (값-구분자 혼동) | 세션을 `키 값\n` 형태로 파일에 저장(`mywrite`)·복원(`myread`)하는데, 저장 시 값에 든 개행을 필터링하지 않고 읽을 때 `explode("\n")`로만 분리한다. `name` 값에 개행 + `admin 1`을 넣어, 복원 시 `admin`이 세션에 주입되도록 만들어 관리자 권한 획득 → 비밀번호 추출 | [natas20](https://kisuk0104.tistory.com/64) |
 
 ---
 
@@ -44,7 +45,8 @@ natas_web_script/
 ├── natas16.py
 ├── natas17.py
 ├── natas18.py
-└── natas19.py
+├── natas19.py
+└── natas20.py
 ```
 
 ---
@@ -58,6 +60,11 @@ python natas08.py
 
 - 각 스크립트 상단의 비밀번호 변수에 본인 값을 넣고 실행하세요. Natas는 직전 레벨을 풀어야 다음 레벨 비밀번호를 얻는 구조라, 값을 고정하지 않고 실행 시 직접 입력하도록 비워두었습니다.
 - `natas13`은 폴더로 구성되어 있습니다. `natas13.py`가 실행 중에 업로드 페이로드 파일을 직접 생성하므로 기본 실행만 할 때는 `natas13/natas13.py`만 돌리면 됩니다. 미리 만든 파일을 읽어 올리는 방식으로 바꿀 경우에는 `natas13/creat_file.py`로 페이로드를 먼저 생성한 뒤 실행하세요.
+- `natas20.py`부터는 비밀번호를 코드에 하드코딩하지 않고 실행 인자로 받습니다. 아래처럼 비밀번호를 인자로 넘겨 실행하세요.
+
+  ```bash
+  python natas20.py <natas20_password>
+  ```
 
 ---
 
