@@ -25,6 +25,8 @@
 | [`natas18.py`](natas18.py) | Session Hijacking (예측 가능한 세션 ID) | 세션 ID가 `rand(1, 640)`으로 생성되어 범위가 1~640으로 좁음. `PHPSESSID` 쿠키값을 1부터 640까지 순회하며 요청해, `admin=1`이 저장된 관리자 세션을 탈취 → 비밀번호 획득 | [natas18](https://kisuk0104.tistory.com/62) |
 | [`natas19.py`](natas19.py) | Session Hijacking (예측 가능한 세션 ID + 단순 인코딩) | natas18과 본질적으로 동일하나 세션값을 `{숫자}-{사용자명}` 형태로 만든 뒤 hex로 한 겹 인코딩. 자신의 쿠키를 디코딩해 규칙을 파악한 뒤, `{1~640}-admin`을 hex로 인코딩한 값으로 `PHPSESSID`를 순회해 관리자 세션 위조 → 비밀번호 획득. 인코딩은 암호화가 아니므로 예측 가능성은 그대로 남는다 | [natas19](https://kisuk0104.tistory.com/63) |
 | [`natas20.py`](natas20.py) | 세션 직렬화 포맷 조작 (값-구분자 혼동) | 세션을 `키 값\n` 형태로 파일에 저장(`mywrite`)·복원(`myread`)하는데, 저장 시 값에 든 개행을 필터링하지 않고 읽을 때 `explode("\n")`로만 분리한다. `name` 값에 개행 + `admin 1`을 넣어, 복원 시 `admin`이 세션에 주입되도록 만들어 관리자 권한 획득 → 비밀번호 추출 | [natas20](https://kisuk0104.tistory.com/64) |
+| [`natas21.py`](natas21.py) | 세션 오염 (공유 세션 저장소) | 같은 세션 저장소를 공유하는 별도 사이트(실험용 colour 페이지)가 POST로 받은 키:값을 검증 없이 세션에 그대로 저장. 그 페이지로 `admin=1`을 전송해 공유 세션에 `admin` 권한을 심은 뒤, 같은 세션으로 본 페이지에 접근해 비밀번호 획득. admin 같은 권한 값은 클라이언트 입력이 아니라 서버가 결정해야 한다 | [natas21](https://kisuk0104.tistory.com/65) |
+| [`natas22.py`](natas22.py) | Execution After Redirect (EAR) | admin이 아니면 `header("Location: /")`로 리다이렉트하지만 뒤에 `exit`/`die()`가 없어 스크립트가 멈추지 않고 하단 코드까지 실행 → 비밀번호가 302 응답 body에 그대로 담겨 전송. `?revelio` 요청에 `allow_redirects=False`를 걸어 자동 리다이렉트를 막고 302 원본 body에서 비밀번호 추출. 접근 제어를 클라이언트 리다이렉트에 맡기면 안 된다 | [natas22](https://kisuk0104.tistory.com/66) |
 
 ---
 
@@ -46,7 +48,9 @@ natas_web_script/
 ├── natas17.py
 ├── natas18.py
 ├── natas19.py
-└── natas20.py
+├── natas20.py
+├── natas21.py
+└── natas22.py
 ```
 
 ---
@@ -64,6 +68,8 @@ python natas08.py
 
   ```bash
   python natas20.py <natas20_password>
+  python natas21.py <natas21_password>
+  python natas22.py <natas22_password>
   ```
 
 ---
