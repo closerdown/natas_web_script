@@ -27,6 +27,8 @@
 | [`natas20.py`](natas20.py) | 세션 직렬화 포맷 조작 (값-구분자 혼동) | 세션을 `키 값\n` 형태로 파일에 저장(`mywrite`)·복원(`myread`)하는데, 저장 시 값에 든 개행을 필터링하지 않고 읽을 때 `explode("\n")`로만 분리한다. `name` 값에 개행 + `admin 1`을 넣어, 복원 시 `admin`이 세션에 주입되도록 만들어 관리자 권한 획득 → 비밀번호 추출 | [natas20](https://kisuk0104.tistory.com/64) |
 | [`natas21.py`](natas21.py) | 세션 오염 (공유 세션 저장소) | 같은 세션 저장소를 공유하는 별도 사이트(실험용 colour 페이지)가 POST로 받은 키:값을 검증 없이 세션에 그대로 저장. 그 페이지로 `admin=1`을 전송해 공유 세션에 `admin` 권한을 심은 뒤, 같은 세션으로 본 페이지에 접근해 비밀번호 획득. admin 같은 권한 값은 클라이언트 입력이 아니라 서버가 결정해야 한다 | [natas21](https://kisuk0104.tistory.com/65) |
 | [`natas22.py`](natas22.py) | Execution After Redirect (EAR) | admin이 아니면 `header("Location: /")`로 리다이렉트하지만 뒤에 `exit`/`die()`가 없어 스크립트가 멈추지 않고 하단 코드까지 실행 → 비밀번호가 302 응답 body에 그대로 담겨 전송. `?revelio` 요청에 `allow_redirects=False`를 걸어 자동 리다이렉트를 막고 302 원본 body에서 비밀번호 추출. 접근 제어를 클라이언트 리다이렉트에 맡기면 안 된다 | [natas22](https://kisuk0104.tistory.com/66) |
+| [`natas23.py`](natas23.py) | PHP 타입 저글링 (느슨한 비교 `>`) | `>` 비교에서 문자열이 숫자로 캐스팅되며 앞자리만 읽히는 점을 이용. `11iloveyou`로 `iloveyou` 포함과 `숫자 > 10`을 한 값에 동시 충족 | [natas23](https://kisuk0104.tistory.com/67) |
+| [`natas24.py`](natas24.py) | PHP 타입 저글링 (`strcmp` + 배열) | `strcmp`에 배열을 넘기면 `NULL` 반환 → 저글링으로 `false` → `!`가 `true`로 뒤집어 우회. `?passwd[]=` 전송 | [natas24](https://kisuk0104.tistory.com/68) |
 
 ---
 
@@ -50,7 +52,9 @@ natas_web_script/
 ├── natas19.py
 ├── natas20.py
 ├── natas21.py
-└── natas22.py
+├── natas22.py
+├── natas23.py
+└── natas24.py
 ```
 
 ---
@@ -70,6 +74,8 @@ python natas08.py
   python natas20.py <natas20_password>
   python natas21.py <natas21_password>
   python natas22.py <natas22_password>
+  python natas23.py <natas23_password>
+  python natas24.py <natas24_password>
   ```
 
 ---
