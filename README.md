@@ -29,6 +29,7 @@
 | [`natas22.py`](natas22.py) | Execution After Redirect (EAR) | admin이 아니면 `header("Location: /")`로 리다이렉트하지만 뒤에 `exit`/`die()`가 없어 스크립트가 멈추지 않고 하단 코드까지 실행 → 비밀번호가 302 응답 body에 그대로 담겨 전송. `?revelio` 요청에 `allow_redirects=False`를 걸어 자동 리다이렉트를 막고 302 원본 body에서 비밀번호 추출. 접근 제어를 클라이언트 리다이렉트에 맡기면 안 된다 | [natas22](https://kisuk0104.tistory.com/66) |
 | [`natas23.py`](natas23.py) | PHP 타입 저글링 (느슨한 비교 `>`) | `>` 비교에서 문자열이 숫자로 캐스팅되며 앞자리만 읽히는 점을 이용. `11iloveyou`로 `iloveyou` 포함과 `숫자 > 10`을 한 값에 동시 충족 | [natas23](https://kisuk0104.tistory.com/67) |
 | [`natas24.py`](natas24.py) | PHP 타입 저글링 (`strcmp` + 배열) | `strcmp`에 배열을 넘기면 `NULL` 반환 → 저글링으로 `false` → `!`가 `true`로 뒤집어 우회. `?passwd[]=` 전송 | [natas24](https://kisuk0104.tistory.com/68) |
+| [`natas25.py`](natas25.py) | LFI → RCE (로그 포이즈닝 체이닝) | `....//`로 경로 필터(`str_replace`)를 우회해 로그 파일에 Path Traversal. User-Agent에 PHP 웹셸을 심어 로그에 저장(로그 포이즈닝)하고, 그 로그를 `include`로 불러오는 순간 코드가 실행(RCE)되어 비밀번호 파일을 읽음 | [natas25](https://kisuk0104.tistory.com/69) |
 
 ---
 
@@ -54,7 +55,8 @@ natas_web_script/
 ├── natas21.py
 ├── natas22.py
 ├── natas23.py
-└── natas24.py
+├── natas24.py
+└── natas25.py
 ```
 
 ---
@@ -76,6 +78,7 @@ python natas08.py
   python natas22.py <natas22_password>
   python natas23.py <natas23_password>
   python natas24.py <natas24_password>
+  python natas25.py <natas25_password>
   ```
 
 ---
