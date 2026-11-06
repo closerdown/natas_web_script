@@ -30,6 +30,8 @@
 | [`natas23.py`](natas23.py) | PHP 타입 저글링 (느슨한 비교 `>`) | `>` 비교에서 문자열이 숫자로 캐스팅되며 앞자리만 읽히는 점을 이용. `11iloveyou`로 `iloveyou` 포함과 `숫자 > 10`을 한 값에 동시 충족 | [natas23](https://kisuk0104.tistory.com/67) |
 | [`natas24.py`](natas24.py) | PHP 타입 저글링 (`strcmp` + 배열) | `strcmp`에 배열을 넘기면 `NULL` 반환 → 저글링으로 `false` → `!`가 `true`로 뒤집어 우회. `?passwd[]=` 전송 | [natas24](https://kisuk0104.tistory.com/68) |
 | [`natas25.py`](natas25.py) | LFI → RCE (로그 포이즈닝 체이닝) | `....//`로 경로 필터(`str_replace`)를 우회해 로그 파일에 Path Traversal. User-Agent에 PHP 웹셸을 심어 로그에 저장(로그 포이즈닝)하고, 그 로그를 `include`로 불러오는 순간 코드가 실행(RCE)되어 비밀번호 파일을 읽음 | [natas25](https://kisuk0104.tistory.com/69) |
+| [`natas26.py`](natas26.py) | PHP 객체 주입 (Object Injection) → RCE | `drawing` 쿠키를 `unserialize()` 하는 점을 이용. `__destruct`가 `logFile`에 `exitMsg`를 기록하는 `Logger` 객체를 직접 직렬화(private라 `\x00Logger\x00<prop>` 널바이트)해, 웹셸을 `.php`로 작성 → 호출해 RCE로 비밀번호 획득 | [natas26](https://kisuk0104.tistory.com/70) |
+| [`natas27.py`](natas27.py) | SQL Injection (MySQL truncation + 끝 공백 무시) | username을 `substr(,0,64)`로 자르는 점 + `VARCHAR` 끝 공백 무시(PADSPACE)를 이용. `natas28`+공백+`a`로 생성(DB엔 64자만 저장) 후 `natas28`+공백으로 로그인 → 기존 레코드와 매칭돼 `print_r`로 비밀번호 노출 | [natas27](https://kisuk0104.tistory.com/72) |
 
 ---
 
@@ -56,7 +58,9 @@ natas_web_script/
 ├── natas22.py
 ├── natas23.py
 ├── natas24.py
-└── natas25.py
+├── natas25.py
+├── natas26.py
+└── natas27.py
 ```
 
 ---
@@ -79,6 +83,8 @@ python natas08.py
   python natas23.py <natas23_password>
   python natas24.py <natas24_password>
   python natas25.py <natas25_password>
+  python natas26.py <natas26_password>
+  python natas27.py <natas27_password>
   ```
 
 ---
