@@ -32,6 +32,8 @@
 | [`natas25.py`](natas25.py) | LFI → RCE (로그 포이즈닝 체이닝) | `....//`로 경로 필터(`str_replace`)를 우회해 로그 파일에 Path Traversal. User-Agent에 PHP 웹셸을 심어 로그에 저장(로그 포이즈닝)하고, 그 로그를 `include`로 불러오는 순간 코드가 실행(RCE)되어 비밀번호 파일을 읽음 | [natas25](https://kisuk0104.tistory.com/69) |
 | [`natas26.py`](natas26.py) | PHP 객체 주입 (Object Injection) → RCE | `drawing` 쿠키를 `unserialize()` 하는 점을 이용. `__destruct`가 `logFile`에 `exitMsg`를 기록하는 `Logger` 객체를 직접 직렬화(private라 `\x00Logger\x00<prop>` 널바이트)해, 웹셸을 `.php`로 작성 → 호출해 RCE로 비밀번호 획득 | [natas26](https://kisuk0104.tistory.com/70) |
 | [`natas27.py`](natas27.py) | SQL Injection (MySQL truncation + 끝 공백 무시) | username을 `substr(,0,64)`로 자르는 점 + `VARCHAR` 끝 공백 무시(PADSPACE)를 이용. `natas28`+공백+`a`로 생성(DB엔 64자만 저장) 후 `natas28`+공백으로 로그인 → 기존 레코드와 매칭돼 `print_r`로 비밀번호 노출 | [natas27](https://kisuk0104.tistory.com/72) |
+| [`natas28.py`](natas28.py) | SQL Injection (AES-ECB 블록 조작) | 검색어가 AES-ECB로 암호화되는데 블록이 독립 암호화되는 점을 이용. 따옴표 이스케이프(`\`)를 블록 경계에 정렬시킨 뒤 블록을 잘라내/재배치해 따옴표를 살려 `UNION SELECT` 주입 → 비밀번호 추출 | [natas28](https://kisuk0104.tistory.com/74) |
+| [`natas29.py`](natas29.py) | OS Command Injection (Perl 2-arg `open()`) | 2-arg `open()`이 파일명 속 `\|`를 명령으로 해석하는 점을 악용. `\|`로 쉘 명령 실행, 와일드카드 `na*`로 `natas` 문자열 필터 우회, `#`/`%00`로 강제되는 `.txt` 확장자 절단 → 비밀번호 파일 읽기 | [natas29](https://kisuk0104.tistory.com/77) |
 
 ---
 
@@ -60,7 +62,9 @@ natas_web_script/
 ├── natas24.py
 ├── natas25.py
 ├── natas26.py
-└── natas27.py
+├── natas27.py
+├── natas28.py
+└── natas29.py
 ```
 
 ---
@@ -85,6 +89,8 @@ python natas08.py
   python natas25.py <natas25_password>
   python natas26.py <natas26_password>
   python natas27.py <natas27_password>
+  python natas28.py <natas28_password>
+  python natas29.py <natas29_password>
   ```
 
 ---
