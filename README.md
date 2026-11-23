@@ -34,6 +34,9 @@
 | [`natas27.py`](natas27.py) | SQL Injection (MySQL truncation + 끝 공백 무시) | username을 `substr(,0,64)`로 자르는 점 + `VARCHAR` 끝 공백 무시(PADSPACE)를 이용. `natas28`+공백+`a`로 생성(DB엔 64자만 저장) 후 `natas28`+공백으로 로그인 → 기존 레코드와 매칭돼 `print_r`로 비밀번호 노출 | [natas27](https://kisuk0104.tistory.com/72) |
 | [`natas28.py`](natas28.py) | SQL Injection (AES-ECB 블록 조작) | 검색어가 AES-ECB로 암호화되는데 블록이 독립 암호화되는 점을 이용. 따옴표 이스케이프(`\`)를 블록 경계에 정렬시킨 뒤 블록을 잘라내/재배치해 따옴표를 살려 `UNION SELECT` 주입 → 비밀번호 추출 | [natas28](https://kisuk0104.tistory.com/74) |
 | [`natas29.py`](natas29.py) | OS Command Injection (Perl 2-arg `open()`) | 2-arg `open()`이 파일명 속 `\|`를 명령으로 해석하는 점을 악용. `\|`로 쉘 명령 실행, 와일드카드 `na*`로 `natas` 문자열 필터 우회, `#`/`%00`로 강제되는 `.txt` 확장자 절단 → 비밀번호 파일 읽기 | [natas29](https://kisuk0104.tistory.com/77) |
+| [`natas30.py`](natas30.py) | SQL Injection (Perl CGI.pm `param()` + DBI `quote()`) | `param()`은 같은 파라미터가 여러 번 오면 **리스트를 반환**한다. 이 리스트가 `quote($값, $타입)`로 넘어가 두 번째 원소가 `quote()`의 **타입 인자**가 되고, 숫자 타입 코드(`4`)를 주면 값이 숫자로 간주돼 **따옴표·이스케이프가 생략**된다. payload를 `["1 or 1=1", "4"]` 리스트로 구성해 `1 or 1=1`을 생주입 → 비밀번호 추출 | [natas30](https://kisuk0104.tistory.com/78) |
+| [`natas31.py`](natas31.py) | 임의 파일 읽기 (Perl ARGV magic + 2-arg `open()`) | `param('file')`에 일반 필드로 문자열 `ARGV`를 넣으면 `while(<$file>)`가 Perl 내장 특수 핸들 `<ARGV>`로 동작한다. `<ARGV>`는 `@ARGV`의 값을 2-arg `open`으로 열어 읽는데, `@ARGV`는 `=` 없는 URL 쿼리스트링에서 채워진다. `if(param('file'))` 분기 통과용 미끼 파일을 함께 업로드하고 쿼리스트링에 `/etc/natas_webpass/natas32`를 실어 비밀번호 파일 읽기 | [natas31](https://kisuk0104.tistory.com/79) |
+| [`natas32.py`](natas32.py) | OS Command Injection (RCE) → 권한상승(SUID) | natas31과 동일한 ARGV magic이되, 2-arg `open` 문자열 끝에 `\|`를 붙여 **명령 실행(RCE)** 으로 확장. path traversal(`../`)로 웹루트(`/var/www/natas/natas32/`)를 뒤져 SUID 바이너리 `getpassword`를 찾아 실행한다. 소유자 root + SUID(`-rws`)라 실행 시 root 권한으로 동작해 natas33 비밀번호를 획득(그룹 실행권한으로 실행, SUID로 권한상승) | [natas32](https://kisuk0104.tistory.com/80) |
 
 ---
 
@@ -64,7 +67,10 @@ natas_web_script/
 ├── natas26.py
 ├── natas27.py
 ├── natas28.py
-└── natas29.py
+├── natas29.py
+├── natas30.py
+├── natas31.py
+└── natas32.py
 ```
 
 ---
@@ -91,6 +97,9 @@ python natas08.py
   python natas27.py <natas27_password>
   python natas28.py <natas28_password>
   python natas29.py <natas29_password>
+  python natas30.py <natas30_password>
+  python natas31.py <natas31_password>
+  python natas32.py <natas32_password>
   ```
 
 ---
