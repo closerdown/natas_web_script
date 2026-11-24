@@ -8,6 +8,23 @@
 
 ---
 
+## 취약점 분류 한눈에
+
+| 분류 | 레벨 |
+|------|------|
+| 인코딩 / 암호 분석 | 8, 11, 28 |
+| 명령어 삽입 (Command Injection) | 9, 10, 16 |
+| 파일 업로드 | 12, 13 |
+| SQL 인젝션 | 14, 15, 17, 27 |
+| 세션 관리 | 18, 19, 20, 21 |
+| 접근 제어 / 리다이렉트 (EAR) | 22 |
+| PHP 타입 저글링 (느슨한 비교) | 23, 24 |
+| 파일 인클루전 / 로그 포이즈닝 (LFI → RCE) | 25 |
+| PHP 객체 주입 / 역직렬화 | 26, 33 |
+| Perl 취약점 (Perl Jam 계열) | 29, 30, 31, 32 |
+
+---
+
 ## 풀이 목록
 
 | 파일 | 취약점 | 핵심 아이디어 | 블로그 풀이 |
@@ -37,6 +54,7 @@
 | [`natas30.py`](natas30.py) | SQL Injection (Perl CGI.pm `param()` + DBI `quote()`) | `param()`은 같은 파라미터가 여러 번 오면 **리스트를 반환**한다. 이 리스트가 `quote($값, $타입)`로 넘어가 두 번째 원소가 `quote()`의 **타입 인자**가 되고, 숫자 타입 코드(`4`)를 주면 값이 숫자로 간주돼 **따옴표·이스케이프가 생략**된다. payload를 `["1 or 1=1", "4"]` 리스트로 구성해 `1 or 1=1`을 생주입 → 비밀번호 추출 | [natas30](https://kisuk0104.tistory.com/78) |
 | [`natas31.py`](natas31.py) | 임의 파일 읽기 (Perl ARGV magic + 2-arg `open()`) | `param('file')`에 일반 필드로 문자열 `ARGV`를 넣으면 `while(<$file>)`가 Perl 내장 특수 핸들 `<ARGV>`로 동작한다. `<ARGV>`는 `@ARGV`의 값을 2-arg `open`으로 열어 읽는데, `@ARGV`는 `=` 없는 URL 쿼리스트링에서 채워진다. `if(param('file'))` 분기 통과용 미끼 파일을 함께 업로드하고 쿼리스트링에 `/etc/natas_webpass/natas32`를 실어 비밀번호 파일 읽기 | [natas31](https://kisuk0104.tistory.com/79) |
 | [`natas32.py`](natas32.py) | OS Command Injection (RCE) → 실행 권한 바이너리 악용 | natas31과 동일한 ARGV magic이되, 2-arg `open` 문자열 끝에 `\|`를 붙여 **명령 실행(RCE)** 으로 확장. path traversal(`../`)로 웹루트(`/var/www/natas/natas32/`)를 뒤져 `getpassword` 바이너리를 찾는다. 이 파일은 그룹이 `natas32`이고 그룹에 실행 권한(`rwx`)이 있어, natas32 권한으로 그대로 실행하면 natas33 비밀번호가 출력된다 | [natas32](https://kisuk0104.tistory.com/80) |
+| [`natas33.py`](natas33/natas33.py) | Phar 역직렬화 (PHP Object Injection) → RCE | `Executor`의 `__destruct`가 `md5_file($this->filename) == $this->signature`를 **느슨한 비교(`==`)** 로 검사. `signature`를 `true`로 두면 `md5_file`이 반환한 비어있지 않은 해시 문자열이 `true`와 느슨하게 비교돼 무결성 검사를 통과한다. `md5_file`이 `phar://` 경로를 아카이브로 보고 메타데이터를 자동 역직렬화하는 점을 이용해, 직접적인 `unserialize()` 호출 없이 소멸자를 발동시킨다. `filename`을 웹셸 경로로, `signature`를 `true`로 세팅한 `Executor` 객체를 메타데이터로 담은 phar를 생성·업로드하고, 요청의 filename 필드에 `phar://` 경로를 넣어 포함된 웹셸을 실행 → 비밀번호 획득 (phar 생성: [`natas33_sir_gen.php`](natas33/natas33_sir_gen.php), 웹셸: [`natas33_shell.php`](natas33/natas33_shell.php)) | [natas33](https://kisuk0104.tistory.com/81) |
 
 ---
 
@@ -70,7 +88,11 @@ natas_web_script/
 ├── natas29.py
 ├── natas30.py
 ├── natas31.py
-└── natas32.py
+├── natas32.py
+└── natas33/
+    ├── natas33.py            # 웹셸·phar 업로드 후 phar:// 경로로 소멸자 트리거
+    ├── natas33_sir_gen.php   # exploit.phar 생성 (php -d phar.readonly=0)
+    └── natas33_shell.php     # natas34 비밀번호를 읽는 웹셸
 ```
 
 ---
@@ -100,7 +122,10 @@ python natas08.py
   python natas30.py <natas30_password>
   python natas31.py <natas31_password>
   python natas32.py <natas32_password>
+  python natas33/natas33.py <natas33_password>
   ```
+
+- `natas33`은 폴더로 구성되어 있습니다. PHP의 기본 `phar.readonly` 설정 때문에 먼저 `php -d phar.readonly=0 natas33/natas33_sir_gen.php`로 `exploit.phar`를 생성해야 합니다(생성 스크립트 안의 로컬 phar 경로는 본인 환경에 맞게 수정). 이후 `python natas33/natas33.py <natas33_password>`를 실행하면 웹셸과 phar를 업로드하고, filename 필드에 `phar://` 경로를 넣어 소멸자를 트리거한 뒤 응답에서 비밀번호를 추출합니다.
 
 ---
 
